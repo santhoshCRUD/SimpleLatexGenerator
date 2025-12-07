@@ -1,0 +1,138 @@
+﻿@page
+@model DocumentTemplateModel
+@{
+    ViewData["Title"] = "Document Template Generator";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-primary fw-bold">Full LaTeX Document Generator</h2>
+
+    <form method="post">
+
+        <!-- Document Class -->
+        <div class="card p-3 mb-3 shadow-sm">
+            <h5 class="text-secondary">Document Settings</h5>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Document Class</label>
+                    <select class="form-select" asp-for="DocClass">
+                        <option>article</option>
+                        <option>report</option>
+                        <option>book</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Font Size</label>
+                    <select class="form-select" asp-for="FontSize">
+                        <option>10pt</option>
+                        <option>11pt</option>
+                        <option>12pt</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Paper Size</label>
+                    <select class="form-select" asp-for="PaperSize">
+                        <option>A4</option>
+                        <option>Letter</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Packages -->
+        <div class="card p-3 mb-3 shadow-sm">
+            <h5 class="text-secondary">Include Packages</h5>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="PkgGeometry">
+                <label class="form-check-label">geometry</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="PkgAmsmath">
+                <label class="form-check-label">amsmath</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="PkgGraphicx">
+                <label class="form-check-label">graphicx</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="PkgHyperref">
+                <label class="form-check-label">hyperref</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="PkgXcolor">
+                <label class="form-check-label">xcolor</label>
+            </div>
+        </div>
+
+        <!-- Title Info -->
+        <div class="card p-3 mb-3 shadow-sm">
+            <h5 class="text-secondary">Document Information</h5>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Title</label>
+                    <input class="form-control" asp-for="Title" />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Author</label>
+                    <input class="form-control" asp-for="Author" />
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-control" asp-for="Date" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Sections -->
+        <div class="card p-3 mb-3 shadow-sm">
+            <h5 class="text-secondary">Sections</h5>
+
+            <div id="sectionsContainer"></div>
+
+            <button type="button" class="btn btn-outline-primary mt-3" onclick="addSection()">
+                + Add Section
+            </button>
+
+            <input type="hidden" asp-for="JsonSections" id="jsonSections" />
+        </div>
+
+        <button type="submit" class="btn btn-success px-4">Generate Full LaTeX</button>
+        <button class="btn btn-outline-primary mt-2" id="addHeaderBtn">Add to Workspace</button>
+
+        <script>
+            document.getElementById('addHeaderBtn').addEventListener('click', async () => {
+                const code = document.getElementById('latexBox').value;
+                await fetch('/api/snippets/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: code
+                });
+                alert('Added to Workspace');
+            });
+        </script>
+    </form>
+
+    <!-- Output -->
+    @if (!string.IsNullOrEmpty(Model.GeneratedCode))
+    {
+        <div class="card mt-4">
+            <div class="card-header bg-dark text-white">Generated LaTeX Document</div>
+            <div class="card-body">
+                <pre><code>@Model.GeneratedCode</code></pre>
+            </div>
+        </div>
+    }
+</div>
+
+<script src="/js/document-builder.js"></script>

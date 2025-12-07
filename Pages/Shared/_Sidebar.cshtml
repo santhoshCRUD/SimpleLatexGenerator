@@ -1,0 +1,28 @@
+﻿<div id="sidebar" class="bg-dark text-white vh-100 p-3" style="width:260px;min-width:220px;height:auto;">
+    <div class="mb-4">
+        <a asp-page="/Index" class="text-decoration-none text-white">
+            <h4 class="fw-bold">LaTeX Generator</h4>
+        </a>
+    </div>
+
+    <ul class="nav flex-column">
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" asp-page="/HeaderGenerator/Index">Header</a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" asp-page="/TitlePage/Index">Title Page</a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" asp-page="/TableGenerator/Index">Table</a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" asp-page="/Math/Index">Math</a>
+        </li>
+        <li class="nav-item mb-2">
+            <a class="nav-link text-white" asp-page="/Document/Index">Template</a>
+        </li>
+        <li class="nav-item mt-3">
+            <a id="workspaceLink" class="btn btn-outline-light w-100" asp-page="/Workspace/Index">Open Workspace</a>
+        </li>
+    </ul>
+</div>

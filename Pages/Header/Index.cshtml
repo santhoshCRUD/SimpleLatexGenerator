@@ -1,0 +1,55 @@
+﻿@page
+@model HeaderModel
+@{
+    ViewData["Title"] = "Header Generator";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-primary fw-bold">LaTeX Header Generator</h2>
+
+    <form method="post">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Header Text</label>
+                <input type="text" class="form-control" asp-for="HeaderText" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Text Size</label>
+                <select class="form-select" asp-for="TextSize">
+                    <option>Small</option>
+                    <option>Medium</option>
+                    <option>Large</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Text Color</label>
+                <input type="color" class="form-control" asp-for="TextColor" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Alignment</label>
+                <select class="form-select" asp-for="Alignment">
+                    <option>Left</option>
+                    <option>Center</option>
+                    <option>Right</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary px-4">Generate Code</button>
+    </form>
+
+    @if (!string.IsNullOrEmpty(Model.GeneratedCode))
+    {
+        <div class="card mt-4">
+            <div class="card-header bg-dark text-white">Generated LaTeX Code</div>
+            <div class="card-body">
+                <pre><code>@Model.GeneratedCode</code></pre>
+            </div>
+        </div>
+    }
+</div>

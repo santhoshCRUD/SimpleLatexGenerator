@@ -1,0 +1,63 @@
+﻿@page
+@model MathModel
+@{
+    ViewData["Title"] = "Math Equation Maker";
+}
+
+<!-- MathJax for preview -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<div class="container py-4">
+    <h2 class="mb-4 text-primary fw-bold">Math Equation Maker</h2>
+
+    <!-- Tools -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <h5 class="text-secondary mb-3">Add Elements</h5>
+
+        <div class="d-flex flex-wrap gap-2">
+            <button class="btn btn-outline-primary" onclick="addFraction()">Fraction</button>
+            <button class="btn btn-outline-primary" onclick="addSqrt()">Square Root</button>
+            <button class="btn btn-outline-primary" onclick="addIntegral()">Integral</button>
+            <button class="btn btn-outline-primary" onclick="addSummation()">Summation</button>
+            <button class="btn btn-outline-primary" onclick="addMatrix()">Matrix</button>
+            <button class="btn btn-outline-primary" onclick="addSubsup()">Sup/Sub</button>
+        </div>
+    </div>
+
+    <!-- Equation Input -->
+    <textarea id="equationText" class="form-control mb-3" rows="5" placeholder="Your equation will appear here...">@Model.GeneratedCode</textarea>
+
+    <!-- Live Preview -->
+    <div class="card mt-3">
+        <div class="card-header bg-dark text-white">Live Preview</div>
+        <div class="card-body">
+            <p id="preview" class="fs-4"></p>
+        </div>
+    </div>
+
+    <!-- Generate Button -->
+    <form method="post" class="mt-3">
+        <input type="hidden" id="finalCode" name="FinalCode" />
+        <button type="submit" class="btn btn-success px-4">Save Equation</button>
+        <button class="btn btn-outline-primary mt-2" id="addHeaderBtn">Add to Workspace</button>
+
+        <script>
+            document.getElementById('addHeaderBtn').addEventListener('click', async () => {
+                const code = document.getElementById('latexBox').value;
+                await fetch('/api/snippets/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: code
+                });
+                alert('Added to Workspace');
+            });
+        </script>
+    </form>
+</div>
+
+<script src="/js/math-builder.js"></script>
+
+<script>
+    document.getElementById("equationText").addEventListener("input", updatePreview);
+    updatePreview();
+</script>

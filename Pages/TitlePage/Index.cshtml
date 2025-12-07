@@ -1,0 +1,65 @@
+﻿@page
+@model TitlePageModel
+@{
+    ViewData["Title"] = "Title Page Generator";
+}
+
+<div class="container py-4">
+    <h2 class="mb-4 text-primary fw-bold">LaTeX Title Page Generator</h2>
+
+    <form method="post">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Title</label>
+                <input type="text" class="form-control" asp-for="Title" required />
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Subtitle</label>
+                <input type="text" class="form-control" asp-for="Subtitle" />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">Author</label>
+                <input type="text" class="form-control" asp-for="Author" required />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Date</label>
+                <input type="date" class="form-control" asp-for="Date" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Alignment</label>
+                <select class="form-select" asp-for="Alignment">
+                    <option>Center</option>
+                    <option>Left</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary px-4">Generate LaTeX</button>
+        <button class="btn btn-outline-primary mt-2" id="addHeaderBtn">Add to Workspace</button>
+
+        <script>
+            document.getElementById('addHeaderBtn').addEventListener('click', async () => {
+                const code = document.getElementById('latexBox').value;
+                await fetch('/api/snippets/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: code
+                });
+                alert('Added to Workspace');
+            });
+        </script>
+    </form>
+
+    @if (!string.IsNullOrEmpty(Model.GeneratedCode))
+    {
+        <div class="card mt-4">
+            <div class="card-header bg-dark text-white">Generated LaTeX Code</div>
+            <div class="card-body">
+                <pre><code>@Model.GeneratedCode</code></pre>
+            </div>
+        </div>
+    }
+</div>

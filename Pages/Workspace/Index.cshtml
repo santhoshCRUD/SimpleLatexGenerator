@@ -1,0 +1,93 @@
+﻿@page
+@model WorkspaceModel
+@{
+    ViewData["Title"] = "Workspace";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Workspace</h2>
+        <div>
+            <button id="clearBtn" class="btn btn-outline-danger">Clear</button>
+            <button id="downloadBtn" class="btn btn-success ms-2">Download .tex</button>
+        </div>
+    </div>
+
+    <div id="snippets" class="mb-4">
+        <!-- filled by JS -->
+    </div>
+
+    <div class="card">
+        <div class="card-header">Live Document (assembled)</div>
+        <div class="card-body">
+            <pre id="assembled" style="white-space:pre-wrap"></pre>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function refresh() {
+            const res = await fetch('/api/snippets/list');
+            const list = await res.json();
+            const container = document.getElementById('snippets');
+            container.innerHTML = '';
+            list.forEach((s, i) => {
+                const el = document.createElement('div');
+                el.className = 'card mb-2';
+                el.innerHTML = `
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                          <strong>Snippet ${i+1}</strong>
+                          <div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="remove(${i})">Remove</button>
+                          </div>
+                        </div>
+                        <pre class="mt-2">${escapeHtml(s)}</pre>
+                    </div>`;
+                container.appendChild(el);
+            });
+            assemble();
+        }
+
+        function escapeHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+        async function remove(idx){
+            await fetch('/api/snippets/remove/'+idx, { method:'POST' });
+            refresh();
+        }
+
+        async function clearAll(){
+            await fetch('/api/snippets/clear', { method:'POST' });
+            refresh();
+        }
+
+        async function download(){
+            const res = await fetch('/Export/Download', { method:'POST' });
+            if (!res.ok) { alert('Download failed'); return; }
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'document.tex';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        async function assemble() {
+            const res = await fetch('/api/snippets/list');
+            const list = await res.json();
+            // Compose a simple document wrapper
+            let head = "\\documentclass[12pt]{article}\n\\usepackage{amsmath}\n\\usepackage{xcolor}\n\\usepackage{graphicx}\n\\begin{document}\n\n";
+            let tail = "\n\\end{document}";
+            const body = list.join("\n\n");
+            document.getElementById('assembled').textContent = head + body + tail;
+        }
+
+        document.getElementById('clearBtn').addEventListener('click', clearAll);
+        document.getElementById('downloadBtn').addEventListener('click', download);
+        refresh();
+    </script>
+}

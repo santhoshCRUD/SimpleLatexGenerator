@@ -1,0 +1,48 @@
+﻿@page
+@model GenerateModel
+@{
+    ViewData["Title"] = "LaTeX Tools";
+}
+
+<h2>LaTeX Code Generator</h2>
+
+<form method="post" enctype="multipart/form-data">
+
+    <!-- File Upload -->
+    <div class="mb-3">
+        <label>Select .tex file (optional):</label>
+        <input type="file" class="form-control" name="LatexFile" accept=".tex" />
+    </div>
+
+    <hr />
+
+    <!-- Module Selection -->
+    <h4>Select what you want to generate:</h4>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="SelectedTool" value="Header" checked>
+        <label class="form-check-label">Header Generator</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="SelectedTool" value="TitlePage">
+        <label class="form-check-label">Title Page Generator</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="SelectedTool" value="Table">
+        <label class="form-check-label">Table Generator</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="SelectedTool" value="Math">
+        <label class="form-check-label">Math Equation Maker</label>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="SelectedTool" value="FullDocument">
+        <label class="form-check-label">Complete Document Template Generator</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Continue</button>
+</form>

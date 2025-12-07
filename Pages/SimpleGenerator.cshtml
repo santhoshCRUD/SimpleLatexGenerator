@@ -1,0 +1,22 @@
+﻿@page
+@model SimpleGeneratorModel
+@{
+    ViewData["Title"] = "Simple LaTeX Generator";
+}
+
+<h2>Simple LaTeX Generator</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label>Enter any text:</label>
+        <input type="text" class="form-control" name="UserText" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Generate LaTeX</button>
+</form>
+
+@if (Model.GeneratedLatex != null)
+{
+    <h3 class="mt-4">Generated LaTeX Code:</h3>
+    <pre>@Model.GeneratedLatex</pre>
+}

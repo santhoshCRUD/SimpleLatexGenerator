@@ -1,0 +1,80 @@
+﻿@page
+@model HeaderGeneratorModel
+@{
+    ViewData["Title"] = "Header Generator";
+}
+
+<h2 class="mb-3">LaTeX Header Generator</h2>
+
+<form method="post">
+
+    <div class="row g-3">
+
+        <div class="col-md-6">
+            <label class="form-label fw-semibold">Header Text</label>
+            <input type="text" name="HeaderText" class="form-control" required />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Size</label>
+            <select name="Size" class="form-select">
+                <option value="small">Small</option>
+                <option value="normalsize">Normal</option>
+                <option value="large">Large</option>
+                <option value="Large">Large+</option>
+                <option value="huge">Huge</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label fw-semibold">Alignment</label>
+            <select name="Alignment" class="form-select">
+                <option value="\\centering">Center</option>
+                <option value="\\raggedright">Left</option>
+                <option value="\\raggedleft">Right</option>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Color</label>
+            <input type="text" name="Color" class="form-control" placeholder="red / blue / custom" />
+        </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Generate LaTeX</button>
+
+</form>
+
+<hr class="my-4" />
+
+@if (Model.GeneratedLatex != null)
+{
+    <h4>Generated LaTeX Code:</h4>
+
+    <textarea class="form-control" rows="7" id="latexBox">@Model.GeneratedLatex</textarea>
+
+    <button class="btn btn-success mt-2" onclick="copyLatex()">Copy to Clipboard</button>
+    <button class="btn btn-outline-primary mt-2" id="addHeaderBtn">Add to Workspace</button>
+
+    <script>
+        document.getElementById('addHeaderBtn').addEventListener('click', async () => {
+            const code = document.getElementById('latexBox').value;
+            await fetch('/api/snippets/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: code
+            });
+            alert('Added to Workspace');
+        });
+    </script>
+
+    <script>
+        function copyLatex() {
+            const text = document.getElementById("latexBox");
+            text.select();
+            navigator.clipboard.writeText(text.value);
+            alert("Copied!");
+        }
+    </script>
+}
