@@ -16,7 +16,7 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false);
 var app = builder.Build();
 
 // Middleware
